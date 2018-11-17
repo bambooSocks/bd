@@ -32,8 +32,8 @@ def beamDeflection(pos,beamLen,loadPos,loadForce,beamSup):
 def beamSuperposition(pos,beamLen,loadPos,loadForce,beamSup):
     
     deflection=np.zeros(np.size(pos))
-    
-#    for idx, id in pos:
-#        for 
-    
+
+    for idx, id in enumerate(loadPos):    
+        deflection += beamDeflection(pos,beamLen,id,loadForce[idx],beamSup)
+
     return deflection
