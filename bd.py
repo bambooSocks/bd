@@ -1,17 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-def beamDeflection(pos,beamLen,loadPos,loadForce,beamSup):
-    
+def beamDeflection(pos, beamLen, loadPos, loadForce, beamSup):  
     deflection = np.zeros(np.size(pos))
-    EI = 1.2e9
+    EI = 1.2e9      # mention this
     
-    for idx, id in enumerate(pos):
+    for idx, id in enumerate(pos):      # mention id name ... not good, it is not descriptive
         if beamSup == "both":
             if id < loadPos:
                 k=(loadForce*(beamLen-loadPos)*id)/(EI*beamLen)
-                j=(beamLen**2-id**2-(beamLen-loadPos)**2)
+                j=(beamLen**2-id**2-(beamLen-loadPos)**2)       # no need for extra parentecies
             
             if id >= loadPos:
                 k=(loadForce*loadPos*(beamLen-id))/(EI*beamLen)
@@ -30,36 +28,31 @@ def beamDeflection(pos,beamLen,loadPos,loadForce,beamSup):
     
     return deflection
 
-def beamSuperposition(pos,beamLen,loadPos,loadForce,beamSup):
-    
-    deflection=np.zeros(np.size(pos))
+def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
+    deflection = np.zeros(np.size(pos))
 
-    for idx, id in enumerate(loadPos):    
+    for idx, id in enumerate(loadPos):    # the same here
         deflection += beamDeflection(pos,beamLen,id,loadForce[idx],beamSup)
 
     return deflection
 
-
-bl= 6
-lp = np.array([0.4,0.6])
-lf = np.array([-5.00,-6.00])
-bs = 'cantilever'#'both'
-
-
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
-    x = np.sort(np.random.uniform(low=0.0, high=beamLen, size=(100,)))
-    y = beamSuperposition(x,beamLen, loadPos, loadForce, beamSup)
-    #y = beamDeflection(x, beamLen, loadPos, loadForce, beamSup)
-    a = np.array([loadPos])
-    y1 = beamDeflection(a, beamLen, loadPos, loadForce, beamSup)
-    #plt.plot(a, y, 'b*')
-    plt.plot(x, y, 'r-', a, y1, 'b*')
+    x = np.arange(0., beamLen + beamLen/100, beamLen/100)
+    y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
+    y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
+
+    plt.plot(x, y1, 'r-', loadPos, y2, 'b*')
+    plt.gca().invert_yaxis()
     plt.title("Beam deflection")
     plt.xlabel("Computed position")
     plt.ylabel("Deflection")
     plt.xlim([0, beamLen])
     
-    
     plt.show()
     
-beamPlot(bl, lp, lf, bs)
+if __name__ == '__main__':
+    bl = 6
+    lp = np.array([2, 4])
+    lf = np.array([5000, 5000])
+    bs = 'both'#'cantilever'#
+    beamPlot(bl, lp, lf, bs)
