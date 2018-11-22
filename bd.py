@@ -40,19 +40,31 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
     y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
-
-    plt.plot(x, y1, 'r-', loadPos, y2, 'b*')
+    
+    plt.plot(x, y1, 'r-', loadPos, y2, 'b*',)
     plt.gca().invert_yaxis()
-    plt.title("Beam deflection")
+    plt.title("Beam deflection\nBeam type: {:s}".format(beamSup))
     plt.xlabel("Computed position")
     plt.ylabel("Deflection")
     plt.xlim([0, beamLen])
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    plt.tight_layout()
+    plt.grid(color='grey', linestyle='--', linewidth=0.5)
+    
+    #pointing forces
+    for i in range(np.size(loadPos)):
+        plt.annotate("F{:d} = {:.2E}".format(i+1,loadForce[i]), xy=(loadPos[i], y2[i]),  xycoords='data',
+                xytext=(-30, 50), textcoords='offset points', arrowprops=dict(arrowstyle="->"))
+    
+    #max diflection
+    plt.axhline(y=np.max(y1),linewidth=0.5, color='g')
+    plt.text(0,np.max(y1), 'Max. difl. = {:.2E}'.format(np.max(y1)), fontsize=6)
     
     plt.show()
     
 if __name__ == '__main__':
     bl = 6
-    lp = np.array([2, 4])
-    lf = np.array([5000, 5000])
+    lp = np.random.uniform(low=0, high=bl, size=(5,))
+    lf = np.random.uniform(low=0, high=50, size=(5,))
     bs = 'both'#'cantilever'#
     beamPlot(bl, lp, lf, bs)
