@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def beamDeflection(pos,beamLen,loadPos,loadForce,beamSup):
@@ -37,3 +38,28 @@ def beamSuperposition(pos,beamLen,loadPos,loadForce,beamSup):
         deflection += beamDeflection(pos,beamLen,id,loadForce[idx],beamSup)
 
     return deflection
+
+
+bl= 6
+lp = np.array([0.4,0.6])
+lf = np.array([-5.00,-6.00])
+bs = 'cantilever'#'both'
+
+
+def beamPlot(beamLen, loadPos, loadForce, beamSup):
+    x = np.sort(np.random.uniform(low=0.0, high=beamLen, size=(100,)))
+    y = beamSuperposition(x,beamLen, loadPos, loadForce, beamSup)
+    #y = beamDeflection(x, beamLen, loadPos, loadForce, beamSup)
+    a = np.array([loadPos])
+    y1 = beamDeflection(a, beamLen, loadPos, loadForce, beamSup)
+    #plt.plot(a, y, 'b*')
+    plt.plot(x, y, 'r-', a, y1, 'b*')
+    plt.title("Beam deflection")
+    plt.xlabel("Computed position")
+    plt.ylabel("Deflection")
+    plt.xlim([0, beamLen])
+    
+    
+    plt.show()
+    
+beamPlot(bl, lp, lf, bs)
