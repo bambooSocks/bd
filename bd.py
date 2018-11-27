@@ -63,8 +63,8 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     plt.show()
     
 if __name__ == '__main__':
-    bl = 6
-    lp = np.random.uniform(low=0, high=bl, size=(5,))
-    lf = np.random.uniform(low=0, high=50, size=(5,))
+    bl = 600000
+    lp = np.random.uniform(low=0, high=bl, size=(4,))
+    lf = np.random.uniform(low=0, high=50, size=(4,))
     bs = 'both'#'cantilever'#
     beamPlot(bl, lp, lf, bs)
