@@ -1,6 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+##
+## @brief      Calculate the deflection of a single force
+##
+## @param      pos        The position
+## @param      beamLen    The beam length
+## @param      loadPos    The load position
+## @param      loadForce  The load force
+## @param      beamSup    The beam sup
+##
+## @return     { description_of_the_return_value }
+##
+## @author     Johan Emil Levin-Jensen
+##
 def beamDeflection(pos, beamLen, loadPos, loadForce, beamSup):  
     deflection = np.zeros(np.size(pos))
     EI = 1.2e9      # mention this
