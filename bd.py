@@ -41,6 +41,19 @@ def beamDeflection(pos, beamLen, loadPos, loadForce, beamSup):
     
     return deflection
 
+##
+## @brief      { function_description }
+##
+## @param      pos        The position
+## @param      beamLen    The beam length
+## @param      loadPos    The load position
+## @param      loadForce  The load force
+## @param      beamSup    The beam sup
+##
+## @return     { description_of_the_return_value }
+##
+## @author     Johan Emil Levin-Jensen
+##
 def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
     deflection = np.zeros(np.size(pos))
 
@@ -49,6 +62,18 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
 
     return deflection
 
+##
+## @brief      { function_description }
+##
+## @param      beamLen    The beam length
+## @param      loadPos    The load position
+## @param      loadForce  The load force
+## @param      beamSup    The beam sup
+##
+## @return     { description_of_the_return_value }
+## 
+## @author     CHEN CHEN
+##
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
