@@ -77,13 +77,13 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
-    y2 = np.sort(beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup))
+    y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
     
     fig = plt.figure()
     fig.set_figheight(10)
     fig.set_figwidth(10)
     plt.plot(x, y1, 'r-')
-    plt.plot(np.sort(loadPos), y2, 'b*')
+    plt.plot(loadPos, y2, 'b*')
     
 
 
@@ -109,11 +109,11 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     force = np.array([])
 
     for i in range(np.size(y2)):
-        f = 'F{:d} = {:.2E}'.format(i+1, y2[i])
+        f = 'F({:f} m) = {:.2E} N'.format(loadPos[i], loadForce[i])
         force = np.append(force,f)
         i += i 
-        
-    plt.legend(('Beam',('Load position\nForce magnitude:{}'.format(force)),('Max. difl. = {:.2E}'.format(np.max(y1)))), loc = 'best')
+    force = np.sort(force)   
+    plt.legend(('Beam',('Load position\nForce magnitude:{}'.format(force)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
     
     plt.show()
     
@@ -121,5 +121,5 @@ if __name__ == '__main__':
     bl = 70
     lp = np.random.uniform(low=0, high=bl, size=(40,))
     lf = np.random.uniform(low=-40, high=50, size=(40,))
-    bs = 'cantilever'
+    bs = 'both'
     beamPlot(bl, lp, lf, bs)
