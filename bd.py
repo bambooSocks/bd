@@ -114,7 +114,7 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     
     # Sorting data for the legend
     if loadForce.any():
-        force = np.array([(loadPos[idx], loadForce[idx]) for idx in range(len(lp))], dtype=[('pos',int),('force',int)])
+        force = np.array([(loadPos[idx], loadForce[idx]) for idx in range(len(loadPos))], dtype=[('pos',int),('force',int)])
         force.sort(axis=0, order=['pos'])
         force = np.array([np.array([i[0], i[1]]) for i in force])
         force = force[:,1] # Magnitudes of forces sorted in the way corresponding to plotted load positions
@@ -132,9 +132,3 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     
     plt.show()
     
-if __name__ == '__main__':
-    bl = 70
-    lp = np.random.uniform(low=0, high=bl, size=(40,))
-    lf = np.random.uniform(low=-40, high=50, size=(40,))
-    bs = 'both'
-    beamPlot(bl, lp, lf, bs)

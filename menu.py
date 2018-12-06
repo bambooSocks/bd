@@ -64,7 +64,7 @@ def displayMenu(options):
 ##
 ## @return     the array with new load input
 ##
-## @author     Matej Majtan
+## @author     Matej Majtan modified by Johan Emil Levin-Jensen
 ##
 def addLoad(loadArray, beamLen):
     lp = 0
