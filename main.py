@@ -18,37 +18,37 @@ l = np.empty(shape=[0, 2], dtype=float)
 
 
 ##
-## @brief      Asks user to input new load values
+# @brief      Asks user to input new load values
 ##
-## @param      loadArray  the array that should be appended with new load values
+# @param      loadArray  the array that should be appended with new load values
 ##
-## @return     the array with new load input
+# @return     the array with new load input
 ##
-## @author     Matej Majtan
+# @author     Matej Majtan
 ##
 def addLoad(loadArray):
     lp = 0
     lf = menu.inputNumber("Input force of the load: ", "f")
     while lp <= 0 or lp > bl:
         lp = menu.inputNumber("Input position of the load: ", "f")
-        if lp <= 0 or lp >bl:
-        	print("Please enter a position that is in the range of the beam lenght")
+        if lp <= 0 or lp > bl:
+            print("Please enter a position that is in the range of the beam lenght")
     print()     # new line
     return np.append(loadArray, [[lf, lp]], axis=0)
 
 
 ##
-## @brief      Saves a file.
+# @brief      Saves a file.
 ##
-## @param      filename     Name of the file data should be saved into (.json at the end is optional)
-## @param      beamLenght   the length of the beam that should be saved
-## @param      beamSupport  the type of the beam support that should be saved
-## @param      loadArray    the numpy array of loads and its positions that should be saved
+# @param      filename     Name of the file data should be saved into (.json at the end is optional)
+# @param      beamLenght   the length of the beam that should be saved
+# @param      beamSupport  the type of the beam support that should be saved
+# @param      loadArray    the numpy array of loads and its positions that should be saved
 ##
-## @author     Matej Majtan
+# @author     Matej Majtan
 ##
 def saveFile(filename, beamLenght, beamSupport, loadArray):
-	# reate a dictionary used by the json module to create the json file
+        # reate a dictionary used by the json module to create the json file
     data = {"beamLenght": beamLenght,
             "beamSupport": beamSupport,
             "loadArray": [list(i) for i in loadArray]
@@ -60,13 +60,13 @@ def saveFile(filename, beamLenght, beamSupport, loadArray):
 
 
 ##
-## @brief      Loads a json file  to the system
+# @brief      Loads a json file  to the system
 ##
-## @param      filename  Name of the file data should be loaded from (.json at the end is optional)
+# @param      filename  Name of the file data should be loaded from (.json at the end is optional)
 ##
-## @return     tuple with leaded data for beam length, beam support and load array
+# @return     tuple with leaded data for beam length, beam support and load array
 ##
-## @author     Matej Majtan
+# @author     Matej Majtan
 ##
 def loadFile(filename):
     data = {}
@@ -88,7 +88,7 @@ while True:
         while bl <= 0:
             bl = menu.inputNumber("Please enter a valid beam length: ", "f")
             if bl <= 0:
-            	print("The beam lenght has to be a positive number!")
+                print("The beam lenght has to be a positive number!")
 
         # ask user which beam support should be used
         print("\nChoose the beam support:")
@@ -125,7 +125,7 @@ while True:
                     rm = menu.displayMenu(rm_menu)
                     # check whether the back option hasn't been chosen
                     if rm != len(rm_menu):
-                    	l = np.delete(l, rm - 1, 0)
+                        l = np.delete(l, rm - 1, 0)
                 # back chosen
                 elif lm == 3:
                     break
@@ -136,7 +136,7 @@ while True:
 
                 # add load chosen
                 if lm == 1:
-                	# check whether the beam length was given
+                        # check whether the beam length was given
                     if bl == 0:
                         print("You need to first specify the beam length")
                     else:
@@ -154,15 +154,20 @@ while True:
     elif opt == 4:
         file = input("Please enter the file name: ")
         # check whether the file exists
-        if os.path.isfile(file if file.endswith(".json") else file + ".json")
-        	bl, bs, l = loadFile(file)
-        	print("Data successfully loaded")
+        if os.path.isfile(file if file.endswith(".json") else file + ".json"):
+            bl, bs, l = loadFile(file)
+            print("Data successfully loaded")
         else:
-        	print("No such file found")
+            print("No such file found")
     # Generate plot option chosen
     elif opt == 5:
-        # plot the given values
-        bd.beamPlot(bl, l.T[1], l.T[0], bs)
+        if bl == 0.:
+            print("Please configure the beam before plotting the data\n")
+        else:
+            if not l.any():
+                print("Warning: No loads were entered\n")
+            # plot the given values
+            bd.beamPlot(bl, l.T[1], l.T[0], bs)
     # Quit option chosen
     elif opt == 6:
         break
