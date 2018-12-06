@@ -2,63 +2,68 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ##
-## @brief      Calculate the deflection of a single force
+## @brief      Calculate the deflection of a load
 ##
-## @param      pos        The position
+## @param      pos        Array of positions in wich the deflection is calculated
 ## @param      beamLen    The beam length
-## @param      loadPos    The load position
-## @param      loadForce  The load force
-## @param      beamSup    The beam sup
+## @param      loadPos    The position of  a single load
+## @param      loadForce  The force applied in the single position
+## @param      beamSup    The type of support, either "both" or "cantilever"
 ##
-## @return     { description_of_the_return_value }
+## @return     Returns an array of deflection in all the positions specified
 ##
 ## @author     Johan Emil Levin-Jensen
 ##
 def beamDeflection(pos, beamLen, loadPos, loadForce, beamSup):  
     deflection = np.zeros(np.size(pos))
-    EI = 1.2e9      # mention this
+    EI = 6*2e11*1e-3      # A constant that is in all the calculations
     
-    for idx, id in enumerate(pos):      # mention id name ... not good, it is not descriptive
+    for idx, p in enumerate(pos):      # p is the current position, idx is the index in the array of positions
+        
+        #When beamsupport is set to both 
         if beamSup == "both":
-            if id < loadPos:
-                k=(loadForce*(beamLen-loadPos)*id)/(EI*beamLen)
-                j=(beamLen**2-id**2-(beamLen-loadPos)**2)       # no need for extra parentecies
+            if p < loadPos:
+                k=loadForce*(beamLen-loadPos)*p/(EI*beamLen)
+                j=beamLen**2-p**2-(beamLen-loadPos)**2
             
-            if id >= loadPos:
-                k=(loadForce*loadPos*(beamLen-id))/(EI*beamLen)
-                j=(beamLen**2-(beamLen-id)**2-loadPos**2)
+            if p >= loadPos:
+                k=loadForce*loadPos*(beamLen-p)/(EI*beamLen)
+                j=(beamLen**2-(beamLen-p)**2-loadPos**2)
         
+        #When beamsupport is set to cantilever
         if beamSup == "cantilever":
-            if id < loadPos:
-                k=(loadForce*id**2)/EI
-                j=3*loadPos-id
+            if p < loadPos:
+                k=loadForce*p**2/EI
+                j=3*loadPos-p
                 
-            if id >= loadPos:
-                k=(loadForce*loadPos**2)/EI
-                j=3*id-loadPos
+            if p >= loadPos:
+                k=loadForce*loadPos**2/EI
+                j=3*p-loadPos
         
+        #Calculates the final deflection and puts it into array
         deflection[idx]=k*j
     
     return deflection
 
 ##
-## @brief      { function_description }
+## @brief      Calulates the deflection in multiple locations for multiple loads
 ##
-## @param      pos        The position
+## @param      pos        Array of postions in which the position is calculated
 ## @param      beamLen    The beam length
-## @param      loadPos    The load position
-## @param      loadForce  The load force
-## @param      beamSup    The beam sup
+## @param      loadPos    Array of positions for loads to be applied
+## @param      loadForce  Array of loads to be applied in positions
+## @param      beamSup    The type of support, either "both" or "cantilever"
 ##
-## @return     { description_of_the_return_value }
+## @return     Returns an array of deflections in all the pos
 ##
 ## @author     Johan Emil Levin-Jensen
 ##
 def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
     deflection = np.zeros(np.size(pos))
-
-    for idx, id in enumerate(loadPos):    # the same here
-        deflection += beamDeflection(pos,beamLen,id,loadForce[idx],beamSup)
+    
+    #Loops through all the loads and calculates the final deflection by use of superposition principle
+    for idx, lp in enumerate(loadPos):
+        deflection += beamDeflection(pos,beamLen,lp,loadForce[idx],beamSup)
 
     return deflection
 
