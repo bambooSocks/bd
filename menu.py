@@ -49,7 +49,10 @@ def displayMenu(options):
     # wait for correct input
     while not(np.any(choice == np.arange(len(options))+1)):
         choice = inputNumber("Please choose a menu item: ","i")
+        print()
+        if not(np.any(choice == np.arange(len(options))+1)):
+        	print("Please enter a number in range {}-{}".format(min(np.arange(len(options))+1), max(np.arange(len(options))+1)))
 
-    print("")   # new line
+    print()   # new line
 
-    return choice
+    return choice 
