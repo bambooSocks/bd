@@ -112,8 +112,9 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
         f = 'F({:f} m) = {:.2E} N'.format(loadPos[i], loadForce[i])
         force = np.append(force,f)
         i += i 
-    force = np.sort(force)   
-    plt.legend(('Beam',('Load position\nForce magnitude:{}'.format(force)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
+    force = np.sort(force)
+    force = "\n".join(force)
+    plt.legend(('Beam',('Load position\nForce magnitude:\n{}'.format(force)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
     
     plt.show()
     
