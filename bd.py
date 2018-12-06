@@ -68,7 +68,7 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
     return deflection
 
 ##
-## @brief      { function_description }
+## @brief      Plots the Beamloadponi the leg
 ##
 ## @param      beamLen    The beam length
 ## @param      loadPos    The load position
@@ -77,19 +77,19 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
 ##
 ## @return     { description_of_the_return_value }
 ## 
-## @author     CHEN CHEN
+## @author     Jędrzej Konrad Kolbert
 ##
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
-    if not loadForce.any():
+    if loadForce.any():
         y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
     
     fig = plt.figure()
     fig.set_figheight(10)
     fig.set_figwidth(10)
     plt.plot(x, y1, 'r-')
-    if not loadForce.any():
+    if loadForce.any():
         plt.plot(loadPos, y2, 'b*')
     
 
@@ -100,7 +100,6 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     plt.xlabel("Computed position")
     plt.ylabel("Deflection")
     plt.xlim([0, 1.05*beamLen])
-    plt.xticks(np.arange(min(x), max(x)+1, beamLen/10))
     plt.ticklabel_format(style='sci', axis='y1', scilimits=(0,0))
     plt.tight_layout()
     plt.grid(color='grey', linestyle='--', linewidth=0.5) 
@@ -113,16 +112,20 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     
     # applied forces and legend
     
-    force = np.array([])
 
-    if not loadForce.any():
+
+    if loadForce.any():
+        force = np.array([(loadPos[idx], loadForce[idx]) for idx in range(len(lp))], dtype=[('pos',int),('force',int)])
+        force.sort(axis=0, order=['pos'])
+        force = np.array([np.array([i[0], i[1]]) for i in force])
+        force = force[:,1]
+        force_format = np.array([])
         for i in range(np.size(y2)):
-            f = 'F({:f} m) = {:.2E} N'.format(loadPos[i], loadForce[i])
-            force = np.append(force,f)
-            i += i 
-        force = np.sort(force)
-        force = "\n".join(force)
-        plt.legend(('Beam',('Load position\nForce magnitude:\n{}'.format(force)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
+            f = 'F{:d} = {:.2E} N'.format(i+1, force[i])
+            force_format = np.append(force_format,f)
+            i += i  
+        force_format = "\n".join(force_format)
+        plt.legend(('Beam',('Load position\nForce magnitude:{}'.format(force_format)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
     
     plt.show()
     
