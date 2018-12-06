@@ -5,6 +5,8 @@ import os.path
 import bd
 import menu
 
+# main script made by Matej Majtan and modified by Johan Emil Levin-Jensen
+
 # Global variables
 # array of main menu items
 main_m = np.array(["Configure beam", "Configure loads",
