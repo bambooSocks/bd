@@ -22,12 +22,13 @@ while True:
     # Configure beam option chosen
     if opt == 1:
         while True:
-            # if any loads are configured, asks to clear them before procceding (makes sure no load is outside beam)
+            # if any loads are configured, asks to clear them before procceding (makes
+            # sure no load is outside beam)
             if l.any():
                 print("Loads are configured and will have to be cleared to continue, do you want to proceed?")
-                lc_m = menu.displayMenu(["yes","no"])
+                lc_m = menu.displayMenu(["yes", "no"])
                 if lc_m == 1:
-                  l = np.empty(shape=[0, 2], dtype=float)
+                    l = np.empty(shape=[0, 2], dtype=float)
                 if lc_m == 2:
                     break
             # ask for beam length until a positive value is entered
@@ -36,7 +37,7 @@ while True:
                 bl = menu.inputNumber("Please enter a valid beam length: ", "f")
                 if bl <= 0:
                     print("The beam lenght has to be a positive number!")
-    
+
             # ask user which beam support should be used
             print("\nChoose the beam support:")
             bs_m = menu.displayMenu(["both", "cantilever"])
@@ -61,7 +62,7 @@ while True:
 
                 # add load chosen
                 if lm == 1:
-                    l = menu.addLoad(l,bl)
+                    l = menu.addLoad(l, bl)
                 # remove load chosen
                 elif lm == 2:
                     print("Please choose entry you wish to delete:")
@@ -88,7 +89,7 @@ while True:
                     if bl == 0:
                         print("You need to first specify the beam length")
                     else:
-                        l = menu.addLoad(l,bl)
+                        l = menu.addLoad(l, bl)
                 # back chosen
                 elif lm == 2:
                     break
@@ -103,8 +104,12 @@ while True:
         file = input("Please enter the file name: ")
         # check whether the file exists
         if os.path.isfile(file if file.endswith(".json") else file + ".json"):
-            bl, bs, l = menu.loadFile(file)
-            print("Data successfully loaded")
+            ret = menu.loadFile(file, bl)
+            if ret == -1:
+                print("The file is corrupted")
+            else:
+                bl, bs, l = ret
+                print("Data successfully loaded")
         else:
             print("No such file found")
     # Generate plot option chosen

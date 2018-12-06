@@ -57,13 +57,14 @@ def displayMenu(options):
 
     return choice 
 ##
-# @brief      Asks user to input new load values
+## @brief      Asks user to input new load values
 ##
-# @param      loadArray  the array that should be appended with new load values
+## @param      loadArray  the array that should be appended with new load values
+## @param      beamLen   The beam length used for validation
 ##
-# @return     the array with new load input
+## @return     the array with new load input
 ##
-# @author     Matej Majtan
+## @author     Matej Majtan
 ##
 def addLoad(loadArray, beamLen):
     lp = 0
@@ -77,14 +78,14 @@ def addLoad(loadArray, beamLen):
 
 
 ##
-# @brief      Saves a file.
+## @brief      Saves a file.
 ##
-# @param      filename     Name of the file data should be saved into (.json at the end is optional)
-# @param      beamLenght   the length of the beam that should be saved
-# @param      beamSupport  the type of the beam support that should be saved
-# @param      loadArray    the numpy array of loads and its positions that should be saved
+## @param      filename     Name of the file data should be saved into (.json at the end is optional)
+## @param      beamLenght   the length of the beam that should be saved
+## @param      beamSupport  the type of the beam support that should be saved
+## @param      loadArray    the numpy array of loads and its positions that should be saved
 ##
-# @author     Matej Majtan
+## @author     Matej Majtan
 ##
 def saveFile(filename, beamLenght, beamSupport, loadArray):
         # reate a dictionary used by the json module to create the json file
@@ -99,18 +100,32 @@ def saveFile(filename, beamLenght, beamSupport, loadArray):
 
 
 ##
-# @brief      Loads a json file  to the system
+## @brief      Loads a json file  to the system
 ##
-# @param      filename  Name of the file data should be loaded from (.json at the end is optional)
+## @param      filename  Name of the file data should be loaded from (.json at the end is optional)
+## @param      beamLen   The beam length used for validation
 ##
-# @return     tuple with leaded data for beam length, beam support and load array
+## @return     tuple with leaded data for beam length, beam support and load array
 ##
-# @author     Matej Majtan
+## @author     Matej Majtan
 ##
-def loadFile(filename):
+def loadFile(filename, beamLen):
     data = {}
     with open(filename if filename.endswith(".json") else filename + ".json", "r") as read_file:
         data = json.load(read_file)
 
-    # TODO: add checking for correct file (data in it)
-    return (data["beamLenght"], data["beamSupport"], np.array([np.array(i) for i in data["loadArray"]]))
+    # validate the file
+    try:
+        if data["beamLenght"] < 0:
+            return -1
+        if (data["beamSupport"] != "both") and (data["beamSupport"] != "cantilever"):
+            return -1
+        la = np.array([np.array(i) for i in data["loadArray"]])
+        if la.any():
+            if (la[la[1] <= 0]).any() or (la[la[1] > beamLen]).any():
+                return -1
+        return (data["beamLenght"], data["beamSupport"], np.array([np.array(i) for i in data["loadArray"]]))
+    except:
+        pass
+    return -1
+
