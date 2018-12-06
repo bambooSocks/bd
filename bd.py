@@ -68,34 +68,41 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
     return deflection
 
 ##
-## @brief      Plots the Beamloadponi the leg
+## @brief      Plots the beam for multiple loads.
 ##
 ## @param      beamLen    The beam length
 ## @param      loadPos    The load position
 ## @param      loadForce  The load force
 ## @param      beamSup    The beam sup
 ##
-## @return     { description_of_the_return_value }
+## @return     Returns plot of beam, with marked positions of loads and shows the magnitude for each force.
 ## 
 ## @author     Jędrzej Konrad Kolbert
 ##
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
+    # Creating variables for plot of the beam
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
+    
+    # Creating variables for plot of load points
     if loadForce.any():
         y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
     
+    # Setting up the plot area
     fig = plt.figure()
     fig.set_figheight(10)
     fig.set_figwidth(10)
-    plt.plot(x, y1, 'r-')
-    if loadForce.any():
+    
+    plt.plot(x, y1, 'r-') # Plotting the beam 
+    
+
+    if loadForce.any():    # Plotting positions of loads
         plt.plot(loadPos, y2, 'b*')
     
 
 
-
-    plt.gca().invert_yaxis()
+    
+    plt.gca().invert_yaxis() # 
     plt.title("Beam deflection\nBeam type: {:s}".format(beamSup))
     plt.xlabel("Computed position")
     plt.ylabel("Deflection")
@@ -125,7 +132,7 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
             force_format = np.append(force_format,f)
             i += i  
         force_format = "\n".join(force_format)
-        plt.legend(('Beam',('Load position\nForce magnitude:{}'.format(force_format)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
+        plt.legend(('Beam',('Load position\nForce magnitude:\n{}'.format(force_format)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
     
     plt.show()
     
