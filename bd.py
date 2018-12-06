@@ -75,16 +75,16 @@ def beamSuperposition(pos, beamLen, loadPos, loadForce, beamSup):
 ## @param      loadForce  The load force
 ## @param      beamSup    The beam sup
 ##
-## @return     Returns plot of beam, with marked positions of loads and shows the magnitude for each force.
+## @return     Returns plot of the beam, with marked positions of loads and shows the magnitude for each force.
 ## 
-## @author     Jędrzej Konrad Kolbert
+## @author     Jędrzej Konrad Kolbert modified by Matej Majtan
 ##
 def beamPlot(beamLen, loadPos, loadForce, beamSup):
-    # Creating variables for plot of the beam
+    # Creating variables for the plot of the beam
     x = np.arange(0., beamLen + beamLen/100, beamLen/100)
     y1 = beamSuperposition(x, beamLen, loadPos, loadForce, beamSup)
     
-    # Creating variables for plot of load points
+    # Creating variables for the plot of load points
     if loadForce.any():
         y2 = beamSuperposition(loadPos, beamLen, loadPos, loadForce, beamSup)
     
@@ -99,40 +99,36 @@ def beamPlot(beamLen, loadPos, loadForce, beamSup):
     if loadForce.any():    # Plotting positions of loads
         plt.plot(loadPos, y2, 'b*')
     
-
-
+    plt.gca().invert_yaxis() # Measuring deflection downwards 
     
-    plt.gca().invert_yaxis() # 
+    # Setting up title, labels, grid  and ticks 
     plt.title("Beam deflection\nBeam type: {:s}".format(beamSup))
     plt.xlabel("Computed position")
     plt.ylabel("Deflection")
     plt.xlim([0, 1.05*beamLen])
-    plt.ticklabel_format(style='sci', axis='y1', scilimits=(0,0))
+    plt.ticklabel_format(style='sci', axis='y1', scilimits=(0,0)) # Changing tick labels numbers to scientific format
     plt.tight_layout()
-    plt.grid(color='grey', linestyle='--', linewidth=0.5) 
+    plt.grid(color='grey', linestyle='--', linewidth=0.5) # Making grid lines
     
+    plt.axhline(y=np.max(y1),linewidth=1, color='g')     #The line showing max. deflection
     
-
-    # max deflection
-    plt.axhline(y=np.max(y1),linewidth=1, color='g')
-    
-    
-    # applied forces and legend
-    
-
-
+    # Sorting data for the legend
     if loadForce.any():
         force = np.array([(loadPos[idx], loadForce[idx]) for idx in range(len(lp))], dtype=[('pos',int),('force',int)])
         force.sort(axis=0, order=['pos'])
         force = np.array([np.array([i[0], i[1]]) for i in force])
-        force = force[:,1]
-        force_format = np.array([])
+        force = force[:,1] # Magnitudes of forces sorted in the way corresponding to plotted load positions
+        
+        #Making the string containing magnitudes 
+        f_format = np.array([])
         for i in range(np.size(y2)):
-            f = 'F{:d} = {:.2E} N'.format(i+1, force[i])
-            force_format = np.append(force_format,f)
+            x = 'F{:d} = {:.2E} N'.format(i+1, force[i])
+            f_format = np.append(f_format,x)
             i += i  
-        force_format = "\n".join(force_format)
-        plt.legend(('Beam',('Load position\nForce magnitude:\n{}'.format(force_format)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
+        f_format = "\n".join(f_format)
+        
+        #Plotting the legend
+        plt.legend(('Beam',('Load position\nForce magnitude:\n{}'.format(f_format)),('Max. difl. = {:.2E} m'.format(np.max(y1)))), loc = 'best')
     
     plt.show()
     
